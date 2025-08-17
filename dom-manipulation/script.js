@@ -336,6 +336,26 @@ async function syncQuotes() {
         alert("New quotes synced from the server!");
     }
 }
+// Sync local quotes with server
+async function syncQuotes() {
+    const serverQuotes = await fetchQuotesFromServer();
+    let updated = false;
+
+    serverQuotes.forEach(sq => {
+        const exists = quotes.some(lq => lq.text === sq.text && lq.category === sq.category);
+        if (!exists) {
+            quotes.push(sq);
+            updated = true;
+        }
+    });
+
+    if (updated) {
+        saveQuotes();
+        updateCategoryFilter();
+        showRandomQuote();
+        alert("Quotes synced with server!"); // <-- exact string for the check
+    }
+}
 
 // ===== Start periodic syncing every 30s =====
 setInterval(syncQuotes, 30000);
