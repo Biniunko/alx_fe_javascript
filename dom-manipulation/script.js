@@ -283,6 +283,64 @@ function filterQuotes() {
     saveFilter(selectedCategory);
     showRandomQuote();
 }
+// ===== Server Sync / Mock API =====
+const SERVER_API = "https://jsonplaceholder.typicode.com/posts"; // mock API
+
+// Fetch quotes from server (mock)
+async function fetchQuotesFromServer() {
+    try {
+        const res = await fetch(SERVER_API);
+        const data = await res.json();
+        // Map server data to quote format (mock)
+        return data.slice(0, 5).map(item => ({
+            text: item.title,
+            category: "Server",
+            updatedAt: Date.now()
+        }));
+    } catch (err) {
+        console.error("Error fetching server quotes:", err);
+        return [];
+    }
+}
+
+// Post a single quote to server (mock)
+async function postQuoteToServer(quote) {
+    try {
+        await fetch(SERVER_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(quote)
+        });
+    } catch (err) {
+        console.error("Error posting quote to server:", err);
+    }
+}
+
+// Sync local quotes with server
+async function syncQuotes() {
+    const serverQuotes = await fetchQuotesFromServer();
+    let updated = false;
+
+    serverQuotes.forEach(sq => {
+        const exists = quotes.some(lq => lq.text === sq.text && lq.category === sq.category);
+        if (!exists) {
+            quotes.push(sq);
+            updated = true;
+        }
+    });
+
+    if (updated) {
+        saveQuotes();
+        updateCategoryFilter();
+        showRandomQuote();
+        alert("New quotes synced from the server!");
+    }
+}
+
+// ===== Start periodic syncing every 30s =====
+setInterval(syncQuotes, 30000);
+
+
 // ===== Event Listeners =====
 newQuoteBtn.addEventListener("click", showRandomQuote);
 exportBtn.addEventListener("click", exportToJsonFile);
