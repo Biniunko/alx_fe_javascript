@@ -258,25 +258,30 @@ function importFromJsonFile(event) {
     fileReader.readAsText(file);
 }
 function populateCategories() {
-  categoryFilter.innerHTML = ""; // clear old options
+    categoryFilter.innerHTML = ""; // clear old options
 
-  // Always include "All"
-  const allOption = document.createElement("option");
-  allOption.value = "all";
-  allOption.textContent = "All Categories";
-  categoryFilter.appendChild(allOption);
+    // Always include "All"
+    const allOption = document.createElement("option");
+    allOption.value = "all";
+    allOption.textContent = "All Categories";
+    categoryFilter.appendChild(allOption);
 
-  // Unique categories from quotes
-  const categories = [...new Set(quotes.map(q => q.category))];
-  categories.forEach(cat => {
-    const opt = document.createElement("option");
-    opt.value = cat;
-    opt.textContent = cat;
-    categoryFilter.appendChild(opt);
-  });
+    // Unique categories from quotes
+    const categories = [...new Set(quotes.map(q => q.category))];
+    categories.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        categoryFilter.appendChild(opt);
+    });
 
-  // Restore last selected category
-  categoryFilter.value = selectedCategory;
+    // Restore last selected category
+    categoryFilter.value = selectedCategory;
+}
+function filterQuotes() {
+    selectedCategory = categoryFilter.value;
+    saveFilter(selectedCategory);
+    showRandomQuote();
 }
 // ===== Event Listeners =====
 newQuoteBtn.addEventListener("click", showRandomQuote);
