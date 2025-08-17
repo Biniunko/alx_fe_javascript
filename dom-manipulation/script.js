@@ -97,7 +97,7 @@ function addQuote(text, category) {
 
     notifyUser("Quote added successfully!");
 }
-function displayRandomQuote() {
+function showRandomQuote() {
     const quotes = getLocalQuotes();
     if (quotes.length === 0) {
         notifyUser("No quotes available!");
@@ -110,6 +110,7 @@ function displayRandomQuote() {
     const container = document.getElementById("quoteContainer");
     container.innerHTML = `<div>${randomQuote.text} (${randomQuote.category})</div>`;
 }
+
 
 function displayQuotes() {
     const container = document.getElementById("quoteContainer");
